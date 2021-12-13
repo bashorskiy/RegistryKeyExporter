@@ -1,5 +1,6 @@
 ﻿using Microsoft.Win32;
 using System;
+using System.Diagnostics;
 
 namespace RegistryExporter
 {
@@ -11,38 +12,30 @@ namespace RegistryExporter
         {
             if(Environment.Is64BitOperatingSystem)
             {
-                _registryPath = @"SOFTWARE\Wow6432Node\Crypto Pro\Settings\USERS\" + _SID + @"\Keys";
+                _registryPath = @"SOFTWARE\wow6432Node\Crypto Pro\Settings\Users\" + _SID + @"\Keys";
+                Console.WriteLine("x64");
             }
             else
             {
                 _registryPath = @"SOFTWARE\Crypto Pro\Settings\USERS\" + _SID + @"\Keys";
+                Console.WriteLine("x32");
             }
+            Console.WriteLine(_registryPath);
         }
       
         public void PrintRegistry()
         {          
-            RegistryKey rk = Registry.LocalMachine;
-            rk = rk.OpenSubKey(_registryPath);
-            PrintKeys(rk);
+            RegistryKey localKey = Registry.LocalMachine;
+            RegistryKey rKey = localKey.OpenSubKey(_registryPath);
+            PrintKeys(rKey);            
         }
 
+       
         private void PrintKeys(RegistryKey rkey)
         {
             string[] keyNames = rkey.GetSubKeyNames();
-
-            rkey = rkey.OpenSubKey(keyNames[0]);
-            string[] keyFields =
-            {
-                "header.key",
-                "masks.key",
-                "masks2.key",
-                "name.key",
-                "primary.key",
-                "primary2.key"
-            };
-
+            rkey = rkey.OpenSubKey(keyNames[0]);          
             object keyHex = rkey.GetValue("header.key");
-
             byte[] barr = (byte[])keyHex;
             foreach (var item in barr)
             {

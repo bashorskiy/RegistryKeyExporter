@@ -8,8 +8,18 @@ namespace RegistryExporter
     {
         static void Main(string[] args)
         {
-            RegistryExplorer re = new RegistryExplorer();
-            re.PrintRegistry();
+            try
+            {
+                RegistryExplorer re = new RegistryExplorer();
+                re.PrintRegistry();
+                System.Console.ReadLine();
+            }
+            catch (System.Exception)
+            {
+                 
+                throw;
+            }
+            System.Console.ReadLine();
         }
     }
 }
