@@ -39,12 +39,12 @@ namespace RegistryExporter
             byte[] barr = (byte[])keyHex;
             foreach (var item in barr)
             {
-                string tempHex = Convert.ToString(item, 16);
-                if (tempHex.Length == 1)
+                string hexNumb = Convert.ToString(item, 16);
+                if (hexNumb.Length == 1)
                 {
-                    tempHex = "0" + hexNumb;  
+                    hexNumb  = "0" + hexNumb;  
                 }
-                Console.WriteLine(tempHex);
+                Console.WriteLine(hexNumb);
             }
         }     
     }
