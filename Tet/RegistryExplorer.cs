@@ -40,20 +40,13 @@ namespace RegistryExporter
             foreach (var item in barr)
             {
                 string tempHex = Convert.ToString(item, 16);
-                tempHex = AddZeroBeforeSingleSymbol(tempHex);
+                if (tempHex.Length == 1)
+                {
+                    tempHex = "0" + hexNumb;  
+                }
                 Console.WriteLine(tempHex);
             }
-        }
-
-        private string AddZeroBeforeSingleSymbol(string letter)
-        {
-            string hexNumb = letter.ToLower();
-            if (hexNumb.Length == 1)
-            {
-                hexNumb = "0" + hexNumb;
-            }
-            return hexNumb;
-        }
+        }     
     }
 }
 
