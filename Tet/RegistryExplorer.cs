@@ -22,7 +22,7 @@ namespace RegistryExporter
                 _registryPath = @"SOFTWARE\Crypto Pro\Settings\USERS\" + _SID + @"\Keys";
                 Console.WriteLine("x32");
             }
-            _valueNames = new string[]  
+            _valueNames = new string[]
             {
                 "name.key",
                 "header.key",
@@ -45,26 +45,29 @@ namespace RegistryExporter
         private void ExportKeys(RegistryKey rkey)
         {
             string[] keyNames = rkey.GetSubKeyNames();
+            _keys = new Key[keyNames.Length];
             for (int i = 0; i < keyNames.Length; i++)
             {
-                GetHexes(rkey.OpenSubKey(keyNames[i]));
-            }           
+                _keys[i] = new Key();
+                _keys[i].SetFullPath(_registryPath + "\\" + keyNames[i]);
+                _keys[i].SetKeyName(keyNames[i]);
+                GetHexes(rkey.OpenSubKey(keyNames[i]), i);
+            }
         }
 
-        private void GetHexes(RegistryKey rkey)
-        {       
-            
+        private void GetHexes(RegistryKey rkey, int keyIterator)
+        {
             for (int i = 0; i < _valueNames.Length; i++)
             {
-                SetHexNumb(rkey.GetValue(_valueNames[i]));
-            }                     
+                _keys[keyIterator].SetValueNameAndHex(_valueNames[i], GetHexesNumb(rkey.GetValue(_valueNames[i])));                
+            }
         }
 
-        private void SetHexNumb(object keyHex)
+        private string[] GetHexesNumb(object keyHex)
         {
             byte[] keyHexes = (byte[])keyHex;
             string[] newHexes = new string[keyHexes.Length];
-            for (int i = 0; i < keyHexes.Length; i++)        
+            for (int i = 0; i < keyHexes.Length; i++)
             {
                 string hexNumb = Convert.ToString(keyHexes[i], 16);
                 if (hexNumb.Length == 1)
@@ -73,6 +76,7 @@ namespace RegistryExporter
                 }
                 newHexes[i] = hexNumb;
             }
+            return newHexes;
         }
     }
 }
