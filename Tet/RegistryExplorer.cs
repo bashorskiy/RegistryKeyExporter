@@ -9,17 +9,18 @@ namespace RegistryExporter
         private Key[] _keys;
         private string[] _valueNames;
         private string _registryPath;
-        private string _SID = System.Security.Principal.WindowsIdentity.GetCurrent().User.Value;
+        public string SID { get; private set; }
         public RegistryExplorer()
         {
+            SID = System.Security.Principal.WindowsIdentity.GetCurrent().User.Value;
             if (Environment.Is64BitOperatingSystem)
             {
-                _registryPath = @"SOFTWARE\wow6432Node\Crypto Pro\Settings\Users\" + _SID + @"\Keys";
+                _registryPath = @"SOFTWARE\wow6432Node\Crypto Pro\Settings\Users\" + SID + @"\Keys";
                 Console.WriteLine("x64");
             }
             else
             {
-                _registryPath = @"SOFTWARE\Crypto Pro\Settings\USERS\" + _SID + @"\Keys";
+                _registryPath = @"SOFTWARE\Crypto Pro\Settings\USERS\" + SID + @"\Keys";
                 Console.WriteLine("x32");
             }
             _valueNames = new string[]
@@ -49,7 +50,7 @@ namespace RegistryExporter
             for (int i = 0; i < keyNames.Length; i++)
             {
                 _keys[i] = new Key();
-                _keys[i].SetFullPath(_registryPath + "\\" + keyNames[i]);
+                _keys[i].SetKeyFullPath(_registryPath + "\\" + keyNames[i]);
                 _keys[i].SetKeyName(keyNames[i]);
                 GetHexes(rkey.OpenSubKey(keyNames[i]), i);
             }

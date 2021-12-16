@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace RegistryExporter
 {
@@ -10,14 +9,21 @@ namespace RegistryExporter
         {
             try
             {
-                RegistryExplorer re = new RegistryExplorer();
-                re.GetKeys();
+                RegistryExplorer explorer = new RegistryExplorer();
+                Key[] keys = explorer.GetKeys();
+                List<Template> templates = new List<Template>();
+                foreach (Key key in keys)
+                {
+                    Template template = new Template(key);
+                    template.FormatKey();
+                    templates.Add(template);
+                }
+                FileCreator creator = new FileCreator(templates);
                 System.Console.ReadLine();
             }
-            catch (System.Exception)
+            catch (System.Exception e)
             {
-                 
-                throw;
+                System.Console.WriteLine(e.Message);
             }
             System.Console.ReadLine();
         }
