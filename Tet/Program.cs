@@ -11,7 +11,7 @@ namespace RegistryExporter
             try
             {
                 RegistryExplorer re = new RegistryExplorer();
-                re.PrintRegistry();
+                re.ExportKeys();
                 System.Console.ReadLine();
             }
             catch (System.Exception)
