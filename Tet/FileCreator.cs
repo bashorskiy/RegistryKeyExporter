@@ -40,9 +40,10 @@ namespace RegistryExporter
         {
             string writePath = Path.Combine(Directory.GetCurrentDirectory(), productID.FileName + ".txt");
             FileStream fs = new FileStream(writePath, FileMode.Create);
-            byte[] bufferArray = System.Text.Encoding.Default.GetBytes("4.0= "+productID.SerialNumber4+"\n 5.0= "+productID.SerialNumber5);
+            byte[] bufferArray = System.Text.Encoding.Default.GetBytes("4.0= "+productID.SerialNumber4+"\n5.0= "+productID.SerialNumber5);
             fs.Write(bufferArray, 0, bufferArray.Length);
             fs.Close();
+            Printer.Info.CopyFinish();
         }
     }
 }
