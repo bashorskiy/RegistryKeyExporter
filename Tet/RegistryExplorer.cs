@@ -1,65 +1,54 @@
 ﻿using Microsoft.Win32;
 using System;
+using System.Diagnostics;
 
 namespace RegistryExporter
 {
     public class RegistryExplorer
     {
-        private string _registryPath;
-        private string _SID = System.Security.Principal.WindowsIdentity.GetCurrent().User.Value;
-        public RegistryExplorer()
+        private bool _is64 = Environment.Is64BitOperatingSystem;
+        public RegistryKey LocalKey { get; private set; }
+        public string OSVersion { get; private set; }
+        public string RegistryPathToKeys { get; private set; }
+        public string SID { get; private set; }
+        private void SetOsVersion()
         {
-            if(Environment.Is64BitOperatingSystem)
+            string maj = Environment.OSVersion.Version.Major.ToString();
+            string min = Environment.OSVersion.Version.Minor.ToString();
+            OSVersion = maj + "." + min;
+        }
+        private void SetRegistryPathToKeysWithRegKey()
+        {
+            if (OSVersion == "6.3" || OSVersion == "6.2")
             {
-                _registryPath = @"SOFTWARE\Wow6432Node\Crypto Pro\Settings\USERS\" + _SID + @"\Keys";
+                LocalKey = Registry.CurrentUser;
+                if (_is64)
+                {
+                    RegistryPathToKeys = @"Software\Classes\VirtualStore\MACHINE\SOFTWARE\Wow6432Node\Crypto Pro\Settings\Users" + SID + @"\Keys";
+                }
+                else
+                {
+                    RegistryPathToKeys = @"Software\Classes\VirtualStore\MACHINE\SOFTWARE\Crypto Pro\Settings\Users" + SID + @"\Keys";
+                }
             }
             else
             {
-                _registryPath = @"SOFTWARE\Crypto Pro\Settings\USERS\" + _SID + @"\Keys";
+                LocalKey = Registry.LocalMachine;
+                if (_is64)
+                {
+                    RegistryPathToKeys = @"SOFTWARE\wow6432Node\Crypto Pro\Settings\Users\" + SID + @"\Keys";
+                }
+                else
+                {
+                    RegistryPathToKeys = @"SOFTWARE\Crypto Pro\Settings\USERS\" + SID + @"\Keys";
+                }
             }
         }
-      
-        public void PrintRegistry()
-        {          
-            RegistryKey rk = Registry.LocalMachine;
-            rk = rk.OpenSubKey(_registryPath);
-            PrintKeys(rk);
-        }
-
-        private void PrintKeys(RegistryKey rkey)
+        public RegistryExplorer()
         {
-            string[] keyNames = rkey.GetSubKeyNames();
-
-            rkey = rkey.OpenSubKey(keyNames[0]);
-            string[] keyFields =
-            {
-                "header.key",
-                "masks.key",
-                "masks2.key",
-                "name.key",
-                "primary.key",
-                "primary2.key"
-            };
-
-            object keyHex = rkey.GetValue("header.key");
-
-            byte[] barr = (byte[])keyHex;
-            foreach (var item in barr)
-            {
-                string tempHex = Convert.ToString(item, 16);
-                tempHex = AddZeroBeforeSingleSymbol(tempHex);
-                Console.WriteLine(tempHex);
-            }
-        }
-
-        private string AddZeroBeforeSingleSymbol(string letter)
-        {
-            string hexNumb = letter.ToLower();
-            if (hexNumb.Length == 1)
-            {
-                hexNumb = "0" + hexNumb;
-            }
-            return hexNumb;
+            SID = System.Security.Principal.WindowsIdentity.GetCurrent().User.Value;
+            SetOsVersion();          
+            SetRegistryPathToKeysWithRegKey();
         }
     }
 }
