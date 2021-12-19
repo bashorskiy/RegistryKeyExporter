@@ -6,78 +6,49 @@ namespace RegistryExporter
 {
     public class RegistryExplorer
     {
-        private Key[] _keys;
-        private string[] _valueNames;
-        private string _registryPath;
+        private bool _is64 = Environment.Is64BitOperatingSystem;
+        public RegistryKey LocalKey { get; private set; }
+        public string OSVersion { get; private set; }
+        public string RegistryPathToKeys { get; private set; }
         public string SID { get; private set; }
-        public RegistryExplorer()
+        private void SetOsVersion()
         {
-            SID = System.Security.Principal.WindowsIdentity.GetCurrent().User.Value;
-            if (Environment.Is64BitOperatingSystem)
+            string maj = Environment.OSVersion.Version.Major.ToString();
+            string min = Environment.OSVersion.Version.Minor.ToString();
+            OSVersion = maj + "." + min;
+        }
+        private void SetRegistryPathToKeysWithRegKey()
+        {
+            if (OSVersion == "6.3" || OSVersion == "6.2")
             {
-                _registryPath = @"SOFTWARE\wow6432Node\Crypto Pro\Settings\Users\" + SID + @"\Keys";
-                Console.WriteLine("x64");
+                LocalKey = Registry.CurrentUser;
+                if (_is64)
+                {
+                    RegistryPathToKeys = @"Software\Classes\VirtualStore\MACHINE\SOFTWARE\Wow6432Node\Crypto Pro\Settings\Users" + SID + @"\Keys";
+                }
+                else
+                {
+                    RegistryPathToKeys = @"Software\Classes\VirtualStore\MACHINE\SOFTWARE\Crypto Pro\Settings\Users" + SID + @"\Keys";
+                }
             }
             else
             {
-                _registryPath = @"SOFTWARE\Crypto Pro\Settings\USERS\" + SID + @"\Keys";
-                Console.WriteLine("x32");
-            }
-            _valueNames = new string[]
-            {
-                "name.key",
-                "header.key",
-                "primary.key",
-                "masks.key",
-                "primary2.key",
-                "masks2.key"
-            };
-            Console.WriteLine(_registryPath);
-        }
-
-        public Key[] GetKeys()
-        {
-            RegistryKey localKey = Registry.LocalMachine;
-            ExportKeys(localKey.OpenSubKey(_registryPath));
-            return _keys;
-        }
-
-
-        private void ExportKeys(RegistryKey rkey)
-        {
-            string[] keyNames = rkey.GetSubKeyNames();
-            _keys = new Key[keyNames.Length];
-            for (int i = 0; i < keyNames.Length; i++)
-            {
-                _keys[i] = new Key();
-                _keys[i].SetKeyFullPath(_registryPath + "\\" + keyNames[i]);
-                _keys[i].SetKeyName(keyNames[i]);
-                GetHexes(rkey.OpenSubKey(keyNames[i]), i);
-            }
-        }
-
-        private void GetHexes(RegistryKey rkey, int keyIterator)
-        {
-            for (int i = 0; i < _valueNames.Length; i++)
-            {
-                _keys[keyIterator].SetValueNameAndHex(_valueNames[i], GetHexesNumb(rkey.GetValue(_valueNames[i])));                
-            }
-        }
-
-        private string[] GetHexesNumb(object keyHex)
-        {
-            byte[] keyHexes = (byte[])keyHex;
-            string[] newHexes = new string[keyHexes.Length];
-            for (int i = 0; i < keyHexes.Length; i++)
-            {
-                string hexNumb = Convert.ToString(keyHexes[i], 16);
-                if (hexNumb.Length == 1)
+                LocalKey = Registry.LocalMachine;
+                if (_is64)
                 {
-                    hexNumb = "0" + hexNumb;
+                    RegistryPathToKeys = @"SOFTWARE\wow6432Node\Crypto Pro\Settings\Users\" + SID + @"\Keys";
                 }
-                newHexes[i] = hexNumb;
+                else
+                {
+                    RegistryPathToKeys = @"SOFTWARE\Crypto Pro\Settings\USERS\" + SID + @"\Keys";
+                }
             }
-            return newHexes;
+        }
+        public RegistryExplorer()
+        {
+            SID = System.Security.Principal.WindowsIdentity.GetCurrent().User.Value;
+            SetOsVersion();          
+            SetRegistryPathToKeysWithRegKey();
         }
     }
 }

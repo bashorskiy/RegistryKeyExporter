@@ -10,16 +10,19 @@ namespace RegistryExporter
             try
             {
                 RegistryExplorer explorer = new RegistryExplorer();
-                Key[] keys = explorer.GetKeys();
-                List<Template> templates = new List<Template>();
+                RegistryExporter exporter = new RegistryExporter(explorer.RegistryPathToKeys, explorer.LocalKey);
+                Key[] keys = exporter.GetKeys();
+                List<KeyFormatter> formattedHexes = new List<KeyFormatter>();
                 foreach (Key key in keys)
                 {
-                    Template template = new Template(key);
-                    template.FormatKey();
-                    templates.Add(template);
+                    KeyFormatter formattedHex = new KeyFormatter(key);
+                    formattedHex.FormatKey();
+                    formattedHexes.Add(formattedHex);
                 }
-                FileCreator creator = new FileCreator(templates);
-                System.Console.ReadLine();
+                FileCreator creator = new FileCreator(explorer.RegistryPathToKeys, formattedHexes);
+                creator.CreateKeysRegFile();
+                CryptoProProductID productID = new CryptoProProductID();
+                creator.CreateProductIDTextFile(productID);
             }
             catch (System.Exception e)
             {
