@@ -16,7 +16,15 @@ namespace RegistryExporter
             string pathToVersion5 = @"\08F19F05793DC7340B8C2621D83E5BE5\InstallProperties";
 
             SerialNumber4 = GetID(localKey, pathToProducts, pathToVersion4);
+            if (SerialNumber4 != string.Empty)
+            {
+                Printer.Info.CopyProductIDFinish("4.0");
+            }
             SerialNumber5 = GetID(localKey, pathToProducts, pathToVersion5);
+            if (SerialNumber5 != string.Empty)
+            {
+                Printer.Info.CopyProductIDFinish("5.0");
+            }
         }
 
         private string GetID(RegistryKey localKey, string pathToProducts, string pathToVersion)

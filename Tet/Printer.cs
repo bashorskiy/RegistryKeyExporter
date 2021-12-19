@@ -11,10 +11,16 @@ namespace RegistryExporter
                 Console.WriteLine("Скопировали " + keyName);
             }
 
-            public static void CopyFinish()
+            public static void CopyKeysFinish()
             {
                 Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("\nКлючи и серийный номер КриптоПро скопированы в файлы в данной директории.");
+                Console.WriteLine("\nКлючи скопированы в файл в данной директории.");
+                Console.ForegroundColor = ConsoleColor.Gray;
+            }
+            public static void CopyProductIDFinish(string version)
+            {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("\nСерийный номер версии " + version + " скопирован в файл в данной директории.");
                 Console.ForegroundColor = ConsoleColor.Gray;
             }
             public static void ProgramFinish()
