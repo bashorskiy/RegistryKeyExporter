@@ -40,6 +40,7 @@ namespace RegistryExporter
                 _keys[i].SetKeyFullPath(_registryPathToKeys + "\\" + keyNames[i]);
                 _keys[i].SetKeyName(keyNames[i]);
                 GetHexes(rkey.OpenSubKey(keyNames[i]), i);
+                Printer.Info.CopyKeys(_keys[i].GetKeyName());
             }
         }
         private void GetHexes(RegistryKey rkey, int keyIterator)

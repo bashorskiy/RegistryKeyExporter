@@ -5,10 +5,12 @@ namespace RegistryExporter
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
             try
             {
+                Printer.Info.Greetings();
+                System.Console.ReadKey();
                 RegistryExplorer explorer = new RegistryExplorer();
                 RegistryExporter exporter = new RegistryExporter(explorer.RegistryPathToKeys, explorer.LocalKey);
                 Key[] keys = exporter.GetKeys();
@@ -27,7 +29,11 @@ namespace RegistryExporter
             catch (System.Exception e)
             {
                 System.Console.WriteLine(e.Message);
+                System.Console.WriteLine(e.StackTrace);
+                Printer.Errors.ErrorEscalating();
             }
+            Printer.Info.Credits();
+            Printer.Info.ProgramFinish();
             System.Console.ReadLine();
         }
     }

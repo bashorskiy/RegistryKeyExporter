@@ -16,8 +16,7 @@ namespace RegistryExporter
         {
             StringBuilder builder = new StringBuilder();
             builder.AppendLine("[" + _key.GetKeyFullPath() + "]");
-            FormatResult = builder.AppendLine(FormatHex().ToString()).ToString();
-            Console.WriteLine(FormatResult);
+            FormatResult = builder.AppendLine(FormatHex().ToString()).ToString();           
         }
 
         private StringBuilder FormatHex()
