@@ -45,15 +45,9 @@ namespace RegistryExporter
                 return SerialNumber.ToString();
             }
         }
-        public CryptoProProductID()
-        {
-            SetProductID();
-            SetFileName();
-        }
-
         private void SetFileName()
         {
-            if (SerialNumber4 == string.Empty & SerialNumber5 ==string.Empty)
+            if (SerialNumber4 == string.Empty & SerialNumber5 == string.Empty)
             {
                 FileName = "SerialNumbers(empty)";
             }
@@ -61,6 +55,12 @@ namespace RegistryExporter
             {
                 FileName = "SerialNumbers";
             }
+        }
+
+        public CryptoProProductID()
+        {
+            SetProductID();
+            SetFileName();
         }
     }
 }
