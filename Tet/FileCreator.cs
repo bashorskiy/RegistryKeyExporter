@@ -31,8 +31,8 @@ namespace RegistryExporter
                 fs.Write(buffer, 0, item.FormatResult.Length);
             }
 
-            File.Copy(writePath, Path.ChangeExtension(writePath, ".reg"));
             fs.Close();
+            File.Copy(writePath, Path.ChangeExtension(writePath, ".reg"));            
             File.Delete(writePath);
         }
 
@@ -40,7 +40,7 @@ namespace RegistryExporter
         {
             string writePath = Path.Combine(Directory.GetCurrentDirectory(), productID.FileName + ".txt");
             FileStream fs = new FileStream(writePath, FileMode.Create);
-            byte[] bufferArray = System.Text.Encoding.Default.GetBytes("4.0= "+productID.SerialNumber4+"\n5.0= "+productID.SerialNumber5);
+            byte[] bufferArray = System.Text.Encoding.Default.GetBytes("4.0= " + productID.SerialNumber4 + "\n5.0= " + productID.SerialNumber5);
             fs.Write(bufferArray, 0, bufferArray.Length);
             fs.Close();
             Printer.Info.CopyKeysFinish();

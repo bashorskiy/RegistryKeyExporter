@@ -13,7 +13,7 @@ namespace RegistryExporter
                 System.Console.ReadKey();
                 RegistryExplorer explorer = new RegistryExplorer();
                 RegistryExporter exporter = new RegistryExporter(explorer.RegistryPathToKeys, explorer.LocalKey);
-                Key[] keys = exporter.GetKeys();
+                Key[] keys = exporter.GetKeys();              
                 List<KeyFormatter> formattedHexes = new List<KeyFormatter>();
                 foreach (Key key in keys)
                 {
