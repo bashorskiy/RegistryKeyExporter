@@ -53,7 +53,8 @@ namespace RegistryExporter
             }
             else
             {
-                FileName = "SerialNumbers";
+                Random rnumber = new Random();
+                FileName = "SerialNumbers"+rnumber.Next().ToString();
             }
         }
 
