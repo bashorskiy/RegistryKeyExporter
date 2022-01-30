@@ -6,18 +6,26 @@ namespace RegistryExporter
 {
     public class FileCreator
     {
-        private string _regEditorVersion = "Windows Registry Editor Version 5.00";
+        private readonly string _regEditorVersion = "Windows Registry Editor Version 5.00";
         private string _registryPathToKeys;
-        private List<KeyFormatter> _templates;
-        public FileCreator(string registryPathToKeys, List<KeyFormatter> templates)
+        private List<KeyFormatter> _templates;       
+
+        private void SetTemplates(List<KeyFormatter> templates) => _templates = templates;
+        private void SetRegistryPathToKeys(string registryPathToKeys)
         {
-            _templates = templates;
+            if (string.IsNullOrEmpty(registryPathToKeys))
+            {
+                return;
+            }
             Microsoft.Win32.RegistryKey localKey = Microsoft.Win32.Registry.LocalMachine;
             _registryPathToKeys = "[" + localKey.ToString() + "\\" + registryPathToKeys + "]";
         }
-
-        public void CreateKeysRegFile()
+       
+       
+        public void CreateKeysRegFile(string pathToKeys, List<KeyFormatter> templates)
         {
+            SetRegistryPathToKeys(pathToKeys);
+            SetTemplates(templates);           
             Random random = new Random();
             string writePath = Path.Combine(Directory.GetCurrentDirectory(), "my keys" + random.Next().ToString() + ".txt");
 
@@ -34,6 +42,7 @@ namespace RegistryExporter
             fs.Close();
             File.Copy(writePath, Path.ChangeExtension(writePath, ".reg"));            
             File.Delete(writePath);
+            Printer.Info.CopyKeysFinish();
         }
 
         public void CreateProductIDTextFile(CryptoProProductID productID)
@@ -42,9 +51,9 @@ namespace RegistryExporter
             FileStream fs = new FileStream(writePath, FileMode.Create);
             byte[] bufferArray = System.Text.Encoding.Default.GetBytes("4.0= " + productID.SerialNumber4 + "\n5.0= " + productID.SerialNumber5);
             fs.Write(bufferArray, 0, bufferArray.Length);
-            fs.Close();
-            Printer.Info.CopyKeysFinish();
+            fs.Close();           
         }
+
     }
 }
 

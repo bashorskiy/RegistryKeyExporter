@@ -10,21 +10,26 @@ namespace RegistryExporter
             try
             {
                 Printer.Info.Greetings();
-                System.Console.ReadKey();
+                System.Console.ReadKey(true);
+
+                FileCreator creator = new FileCreator();
+                creator.CreateProductIDTextFile(new CryptoProProductID());
+
                 RegistryExplorer explorer = new RegistryExplorer();
                 RegistryExporter exporter = new RegistryExporter(explorer.RegistryPathToKeys, explorer.LocalKey);
-                Key[] keys = exporter.GetKeys();              
-                List<KeyFormatter> formattedHexes = new List<KeyFormatter>();
-                foreach (Key key in keys)
+                Key[] keys = exporter.GetKeys();
+               
+                if (keys != null)
                 {
-                    KeyFormatter formattedHex = new KeyFormatter(key);
-                    formattedHex.FormatKey();
-                    formattedHexes.Add(formattedHex);
-                }
-                FileCreator creator = new FileCreator(explorer.RegistryPathToKeys, formattedHexes);
-                creator.CreateKeysRegFile();
-                CryptoProProductID productID = new CryptoProProductID();
-                creator.CreateProductIDTextFile(productID);
+                    List<KeyFormatter> formattedHexes = new List<KeyFormatter>();
+                    foreach (Key key in keys)
+                    {
+                        KeyFormatter formattedHex = new KeyFormatter(key);
+                        formattedHex.FormatKey();
+                        formattedHexes.Add(formattedHex);
+                    }                    
+                    creator.CreateKeysRegFile(explorer.RegistryPathToKeys, formattedHexes);
+                }                               
             }
             catch (System.Exception e)
             {

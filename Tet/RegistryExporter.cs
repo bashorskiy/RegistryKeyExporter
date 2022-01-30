@@ -5,7 +5,7 @@ namespace RegistryExporter
 {
     public class RegistryExporter
     {
-        private Key[] _keys;
+        private Key[] _keys=null;
         private RegistryKey _localKey;
         private string _registryPathToKeys;
         private string[] _valueNames;
@@ -31,8 +31,13 @@ namespace RegistryExporter
         }
 
         private void ExportKeys(RegistryKey rkey)
-        {
+        {           
             string[] keyNames = rkey.GetSubKeyNames();
+            if (keyNames.Length == 0)
+            {
+                Printer.Warnings.KeysNotFound();
+                return;
+            }
             _keys = new Key[keyNames.Length];
             for (int i = 0; i < keyNames.Length; i++)
             {
