@@ -49,11 +49,13 @@ namespace RegistryExporter
         {
             if (SerialNumber4 == string.Empty & SerialNumber5 == string.Empty)
             {
+                Printer.Warnings.SerialNumbersNotFound();
                 FileName = "SerialNumbers(empty)";
             }
             else
             {
-                FileName = "SerialNumbers";
+                Random rnumber = new Random();
+                FileName = "SerialNumbers"+rnumber.Next().ToString();
             }
         }
 

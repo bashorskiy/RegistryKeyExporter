@@ -4,6 +4,24 @@ namespace RegistryExporter
 {
     public static class Printer
     {
+        private static void ColorChangingWithReset(ConsoleColor color, string msg)
+        {
+            Console.ForegroundColor = color;
+            Console.WriteLine(msg);
+            Console.ForegroundColor = ConsoleColor.Gray;
+        }
+        public static class Warnings
+        {
+            public static void KeysNotFound()
+            {
+                ColorChangingWithReset(ConsoleColor.Yellow, "Ключи не найдены в реестре");
+            }
+
+            public static void SerialNumbersNotFound()
+            {
+                ColorChangingWithReset(ConsoleColor.Yellow, "Серийный номер КриптоПро не найден");
+            }
+        }
         public static class Info
         {
             public static void CopyKeys(string keyName)
@@ -13,21 +31,15 @@ namespace RegistryExporter
 
             public static void CopyKeysFinish()
             {
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("\nКлючи скопированы в файл в данной директории.");
-                Console.ForegroundColor = ConsoleColor.Gray;
+                ColorChangingWithReset(ConsoleColor.Green, "\nКлючи скопированы в файл в данной директории.");
             }
             public static void CopyProductIDFinish(string version)
             {
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("\nСерийный номер версии " + version + " скопирован в файл в данной директории.");
-                Console.ForegroundColor = ConsoleColor.Gray;
+                ColorChangingWithReset(ConsoleColor.Green, "\nСерийный номер версии " + version + " скопирован в файл в данной директории.");
             }
             public static void ProgramFinish()
             {
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("\nРабота программы завершена. Нажмите Enter для закрытия окна.");
-                Console.ForegroundColor = ConsoleColor.Gray;
+                ColorChangingWithReset(ConsoleColor.Green, "\nРабота программы завершена. Нажмите Enter для закрытия окна.");
             }
 
             public static void Credits()
@@ -44,10 +56,10 @@ namespace RegistryExporter
 
             public static void Greetings()
             {
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.WriteLine("\n\t\t RegistryExporter копирует ключи из реестра в .reg файл и достаёт серийный номер КриптоПро\n\n\n" +
-                    "Нажмите любую клавишу для старта программы\n");
-                Console.ForegroundColor = ConsoleColor.Gray;
+                ColorChangingWithReset(ConsoleColor.White,
+                "\nRegistryExporter копирует ключи из реестра(если он там есть) в .reg файл\n" +
+                "и достаёт серийный номер КриптоПро\n\n\n" +
+                "Нажмите любую клавишу для старта программы\n");
             }
         }
 
