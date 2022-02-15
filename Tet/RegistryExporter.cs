@@ -31,13 +31,13 @@ namespace RegistryExporter
         }
 
         private void ExportKeys(RegistryKey rkey)
-        {           
-            string[] keyNames = rkey.GetSubKeyNames();
-            if (keyNames.Length == 0)
+        {         
+            if (rkey is null)
             {
                 Printer.Warnings.KeysNotFound();
                 return;
             }
+            string[] keyNames = rkey.GetSubKeyNames();            
             _keys = new Key[keyNames.Length];
             for (int i = 0; i < keyNames.Length; i++)
             {
